@@ -11,7 +11,8 @@ library(shiny)
 library(dplyr)
 library(BH)
 
-# Omly include basic NLP libraries - as this version will be gitHub public.
+# Only include basic NLP libraries - as this version will be gitHub public.
+# Used public libs as this does not form part of the assessment.
 library(NLP)
 library(openNLP)
 
@@ -35,9 +36,15 @@ shinyServer(function(input, output) {
     
     if(nchar(input$plaintext) < 1001){
     
-      tagged_table <- table(tagPOS(input$plaintext)[[2]])
-
-      plot(tagged_table, main = "Grammatical Summary", xlab = "Grammatical Tag", ylab = "Frequency", col="blue") 
+      #tagged_table <- table(tagPOS(input$plaintext)[[2]])
+      #plot(tagged_table, main = "Grammatical Summary", xlab = "Grammatical Tag", ylab = "Frequency", col="blue") 
+      
+      df <- as.data.frame(table(tagPOS(input$plaintext)[[2]]))
+      names(df) <- c("tag", "freq") 
+      dfso <- head(df[order(df$freq, decreasing=TRUE), ], 10)
+      
+      barplot(height=dfso$freq,names.arg=dfso$tag)
+      
   }
     
   })
